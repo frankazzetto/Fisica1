@@ -1,0 +1,451 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary)}
+.fc{width:100%;padding:12px 0}
+.title{font-size:15px;font-weight:500;text-align:center;padding:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);margin-bottom:12px;border:0.5px solid var(--color-border-tertiary)}
+.start-box{background:#534AB7;color:#EEEDFE;border-radius:999px;padding:10px 28px;font-size:14px;font-weight:500;text-align:center;margin:0 auto 12px;width:fit-content;display:block}
+.q-box{background:var(--color-background-primary);border:1.5px solid var(--color-border-secondary);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:500;text-align:center;cursor:pointer;transition:background .15s,transform .1s}
+.q-box:hover{background:var(--color-background-secondary);transform:scale(1.01)}
+.q-box.active{border-color:#534AB7;background:#EEEDFE}
+.q-box.active-dark{border-color:#7F77DD;background:#26215C;color:#EEEDFE}
+.q-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.branch{display:none;width:100%;animation:fadeIn .2s ease}
+.branch.open{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.arrow-down{text-align:center;font-size:18px;color:var(--color-text-secondary);line-height:1.2;margin:2px 0}
+.formula-card{background:var(--color-background-secondary);border-left:3px solid #534AB7;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:10px 14px;margin:6px 0;font-size:12px}
+.formula-card .fc-title{font-weight:500;font-size:13px;color:#534AB7;margin-bottom:6px}
+.formula-card.teal{border-left-color:#0F6E56}.formula-card.teal .fc-title{color:#0F6E56}
+.formula-card.coral{border-left-color:#993C1D}.formula-card.coral .fc-title{color:#993C1D}
+.formula-card.amber{border-left-color:#854F0B}.formula-card.amber .fc-title{color:#854F0B}
+.formula-card.pink{border-left-color:#993556}.formula-card.pink .fc-title{color:#993556}
+.formula-card.blue{border-left-color:#185FA5}.formula-card.blue .fc-title{color:#185FA5}
+.frow{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0}
+.tag{display:inline-block;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:4px;padding:2px 7px;font-size:11px;font-family:var(--font-mono)}
+.warn{background:#FAEEDA;border:0.5px solid #EF9F27;border-radius:6px;padding:6px 10px;font-size:11px;color:#633806;margin:4px 0}
+.step-label{font-size:11px;color:var(--color-text-secondary);text-align:center;margin:2px 0}
+.connector{border-left:2px dashed var(--color-border-secondary);margin-left:12px;padding-left:12px;margin-top:4px}
+.next-link{display:inline-block;background:#E1F5EE;color:#0F6E56;border:0.5px solid #0F6E56;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;margin-top:4px}
+.next-link:hover{background:#9FE1CB}
+.back-btn{font-size:11px;color:var(--color-text-secondary);cursor:pointer;text-decoration:underline;display:block;text-align:center;margin:6px 0}
+.section-sep{border-top:1px dashed var(--color-border-tertiary);margin:10px 0}
+.eq{font-family:var(--font-mono);font-size:12px;background:var(--color-background-primary);border-radius:4px;padding:2px 6px;display:inline-block;margin:2px 2px}
+.eq-block{font-family:var(--font-mono);font-size:12px;background:var(--color-background-primary);border-radius:4px;padding:5px 10px;display:block;margin:3px 0;border:0.5px solid var(--color-border-tertiary)}
+.out-box{background:var(--color-background-secondary);border-radius:6px;padding:6px 10px;font-size:11px;margin:4px 0}
+.out-box b{color:#185FA5}
+.sub-q{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin:6px 0 4px}
+</style>
+
+<div class="fc">
+<div class="title">Flowchart decisionale — Fisica I (Cinematica & Dinamica)</div>
+
+<div class="start-box">▶ LEGGI IL PROBLEMA</div>
+<div class="arrow-down">↓</div>
+<div class="step-label">Identifica le parole chiave → scegli il blocco:</div>
+<div style="height:6px"></div>
+
+<div class="q-row" id="main-row">
+  <div class="q-box" onclick="toggle('urto')">⚡ C'è un URTO?</div>
+  <div class="q-box" onclick="toggle('energia')">⚡ ENERGIA / ATTRITO / MOLLA?</div>
+  <div class="q-box" onclick="toggle('cinem')">⚡ MOTO (parabolico / rettilineo)?</div>
+  <div class="q-box" onclick="toggle('din')">⚡ FORZE esplicite / F=ma?</div>
+  <div class="q-box" onclick="toggle('grav')">⚡ GRAVITAZIONE / orbite?</div>
+  <div class="q-box" onclick="toggle('rot')">⚡ ROTAZIONE / corpo rigido?</div>
+</div>
+
+<!-- BLOCCO URTO -->
+<div class="branch" id="b-urto">
+<div class="arrow-down">↓</div>
+<div class="formula-card pink">
+  <div class="fc-title">BLOCCO A — URTO (parola chiave: "urto", "collisione", "proiettile conficcato", "si attaccano", "si scontrano")</div>
+  <div class="warn">⚠ In un urto, la quantità di moto TOTALE si conserva SEMPRE (se non ci sono forze esterne). Chiediti: l'urto è elastico o anelastico?</div>
+  <div class="sub-q">Step 1 — Tipo di urto?</div>
+  <div class="q-row">
+    <div class="q-box" onclick="toggle('urto-anel')">Anelastico (rimangono uniti / "conficcato" / non specificato)</div>
+    <div class="q-box" onclick="toggle('urto-el')">Elastico (specificato esplicitamente)</div>
+    <div class="q-box" onclick="toggle('urto-2d')">2D / obliquo (angoli dati)</div>
+  </div>
+</div>
+
+<div class="branch" id="b-urto-anel">
+  <div class="connector">
+  <div class="formula-card pink">
+    <div class="fc-title">URTO ANELASTICO (o completamente anelastico)</div>
+    <div class="sub-q">Legge: conservazione quantità di moto SOLO</div>
+    <div class="eq-block">m₁v₁ᵢ + m₂v₂ᵢ = m₁v₁f + m₂v₂f</div>
+    <div class="sub-q">Se completamente anelastico (rimangono uniti → v_f comune):</div>
+    <div class="eq-block">m₁v₁ᵢ + m₂v₂ᵢ = (m₁ + m₂)·vf</div>
+    <div class="eq-block">→ vf = (m₁v₁ᵢ + m₂v₂ᵢ) / (m₁ + m₂)</div>
+    <div class="sub-q">Se v₂ᵢ = 0 (bersaglio fermo):</div>
+    <div class="eq-block">vf = m₁·v₁ᵢ / (m₁ + m₂)</div>
+    <div class="sub-q">Energia persa nell'urto:</div>
+    <div class="eq-block">ΔKurto = ½(m₁+m₂)vf² - ½m₁v₁ᵢ² - ½m₂v₂ᵢ²  (< 0)</div>
+    <div class="out-box"><b>Output tipici:</b> vf subito dopo l'urto, ΔK persa</div>
+    <div class="warn">⚠ Se dopo l'urto c'è una molla o un'oscillazione → usa il risultato vf nel BLOCCO ENERGIA</div>
+    <span class="next-link" onclick="openAndScroll('energia')">→ Continua nel BLOCCO ENERGIA</span>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('urto-anel')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-urto-el">
+  <div class="connector">
+  <div class="formula-card pink">
+    <div class="fc-title">URTO ELASTICO (1D)</div>
+    <div class="sub-q">Leggi: conservazione p + conservazione K</div>
+    <div class="eq-block">m₁v₁ᵢ + m₂v₂ᵢ = m₁v₁f + m₂v₂f</div>
+    <div class="eq-block">½m₁v₁ᵢ² + ½m₂v₂ᵢ² = ½m₁v₁f² + ½m₂v₂f²</div>
+    <div class="sub-q">Formule chiuse (combina le due equazioni):</div>
+    <div class="eq-block">v₁f = [(m₁-m₂)v₁ᵢ + 2m₂v₂ᵢ] / (m₁+m₂)</div>
+    <div class="eq-block">v₂f = [2m₁v₁ᵢ + (m₂-m₁)v₂ᵢ] / (m₁+m₂)</div>
+    <div class="sub-q">Caso speciale — bersaglio fermo (v₂ᵢ = 0):</div>
+    <div class="eq-block">v₁f = (m₁-m₂)/(m₁+m₂) · v₁ᵢ</div>
+    <div class="eq-block">v₂f = 2m₁/(m₁+m₂) · v₁ᵢ</div>
+    <div class="sub-q">Se m₁ = m₂: scambio di velocità!</div>
+    <div class="eq-block">v₁f = 0;  v₂f = v₁ᵢ</div>
+    <div class="sub-q">Se m₂ ≫ m₁ (parete rigida):</div>
+    <div class="eq-block">v₁f ≈ -v₁ᵢ  (rimbalza indietro)</div>
+    <div class="out-box"><b>Output tipici:</b> v₁f, v₂f, variazione di K (= 0 se elastico)</div>
+    <span class="next-link" onclick="openAndScroll('energia')">→ Verifica con BLOCCO ENERGIA se richiesto</span>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('urto-el')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-urto-2d">
+  <div class="connector">
+  <div class="formula-card pink">
+    <div class="fc-title">URTO 2D (due dimensioni)</div>
+    <div class="sub-q">Legge: conservazione p in forma vettoriale → scomponi per asse</div>
+    <div class="eq-block">asse x: m₁v₁ᵢ + m₂v₂ᵢ = m₁v₁f·cosθ₁ + m₂v₂f·cosθ₂</div>
+    <div class="eq-block">asse y:       0          = -m₁v₁f·sinθ₁ + m₂v₂f·sinθ₂</div>
+    <div class="sub-q">Se elastico, aggiungi:</div>
+    <div class="eq-block">½m₁v₁ᵢ² + ½m₂v₂ᵢ² = ½m₁v₁f² + ½m₂v₂f²</div>
+    <div class="warn">⚠ 4 incognite (v₁f, v₂f, θ₁, θ₂) → servono 3 equazioni + 1 dato aggiuntivo (uno degli angoli o una velocità finale)</div>
+    <div class="out-box"><b>Output tipici:</b> velocità e angoli di uscita</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('urto-2d')">↑ chiudi</div>
+</div>
+</div>
+
+<!-- BLOCCO ENERGIA -->
+<div class="branch" id="b-energia">
+<div class="arrow-down">↓</div>
+<div class="formula-card teal">
+  <div class="fc-title">BLOCCO B — ENERGIA (parola chiave: "velocità in un punto", "quota", "molla compressa/estesa", "attrito", "lavoro", "distanza percorsa")</div>
+  <div class="warn">⚠ Prima di scrivere l'equazione, identifica: ci sono forze non conservative (attrito)? Ci sono molle?</div>
+  <div class="sub-q">Step 1 — Forze dissipative?</div>
+  <div class="q-row">
+    <div class="q-box" onclick="toggle('en-cons')">No attrito → energia meccanica CONSERVATA</div>
+    <div class="q-box" onclick="toggle('en-attr')">Sì attrito (µ dato, o "su piano ruvido")</div>
+    <div class="q-box" onclick="toggle('en-molla')">C'è una MOLLA (k dato, compressione x)</div>
+  </div>
+</div>
+
+<div class="branch" id="b-en-cons">
+  <div class="connector">
+  <div class="formula-card teal">
+    <div class="fc-title">ENERGIA MECCANICA CONSERVATA (no attrito)</div>
+    <div class="sub-q">Principio: Eᵢ = Ef</div>
+    <div class="eq-block">½mv²ᵢ + mghᵢ + ½kx²ᵢ = ½mv²f + mghf + ½kx²f</div>
+    <div class="sub-q">Versione senza molla:</div>
+    <div class="eq-block">½mv²ᵢ + mghᵢ = ½mv²f + mghf</div>
+    <div class="sub-q">Se parte da fermo (vᵢ = 0):</div>
+    <div class="eq-block">mghᵢ = ½mv²f + mghf  →  v = √[2g(hᵢ-hf)]</div>
+    <div class="sub-q">Se hf = 0 (riferimento al suolo):</div>
+    <div class="eq-block">v = √(2gh)</div>
+    <div class="sub-q">Con molla, da fermo (Eᵢ = ½kx²):</div>
+    <div class="eq-block">½kx² = ½mv²  →  v = x·√(k/m)</div>
+    <div class="out-box"><b>Output tipici:</b> velocità in un punto, quota massima, compressione molla</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('en-cons')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-en-attr">
+  <div class="connector">
+  <div class="formula-card teal">
+    <div class="fc-title">ENERGIA CON ATTRITO (forze non conservative)</div>
+    <div class="sub-q">Principio: ΔEmecc = lavoro forze non conservative</div>
+    <div class="eq-block">ΔK + ΔU = L_nc</div>
+    <div class="eq-block">(Kf - Kᵢ) + (Uf - Uᵢ) = -fk·ℓ</div>
+    <div class="sub-q">Forma esplicita:</div>
+    <div class="eq-block">½mv²f - ½mv²ᵢ + mg(hf-hᵢ) = -µk·N·ℓ</div>
+    <div class="sub-q">Su piano orizzontale (h costante):</div>
+    <div class="eq-block">½mv²f = ½mv²ᵢ - µk·mg·ℓ</div>
+    <div class="sub-q">Su piano inclinato (angolo θ, N = mg cosθ):</div>
+    <div class="eq-block">v = √[2gℓ(sinθ - µk·cosθ)]  (partendo da fermo)</div>
+    <div class="sub-q">Distanza di arresto (vf = 0, vᵢ nota):</div>
+    <div class="eq-block">ℓ = v²ᵢ / (2µk·g)  (piano orizzontale)</div>
+    <div class="sub-q">Forza di attrito dinamico:</div>
+    <div class="eq-block">fk = µk · N</div>
+    <div class="sub-q">Forza normale su piano inclinato:</div>
+    <div class="eq-block">N = mg·cosθ</div>
+    <div class="warn">⚠ L'attrito statico vale: fs ≤ µs·N (non fa lavoro se il corpo non si muove)</div>
+    <div class="out-box"><b>Output tipici:</b> velocità finale, distanza percorsa, energia dissipata = µk·N·ℓ</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('en-attr')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-en-molla">
+  <div class="connector">
+  <div class="formula-card teal">
+    <div class="fc-title">MOLLA (legge di Hooke + energia elastica)</div>
+    <div class="sub-q">Forza molla:</div>
+    <div class="eq-block">F = -k·x  (k = costante elastica [N/m], x = spostamento da riposo)</div>
+    <div class="sub-q">Energia potenziale elastica:</div>
+    <div class="eq-block">U_el = ½·k·x²</div>
+    <div class="sub-q">Energia totale con molla (no attrito):</div>
+    <div class="eq-block">½mv² + mgh + ½kx² = costante</div>
+    <div class="sub-q">Velocità massima (in x=0, punto di equilibrio):</div>
+    <div class="eq-block">½mv²max = ½kA²  →  vmax = A·√(k/m)</div>
+    <div class="sub-q">Ampiezza di oscillazione:</div>
+    <div class="eq-block">A = xmax (compressione/allungamento massimo)</div>
+    <div class="sub-q">Frequenza propria:</div>
+    <div class="eq-block">ω = √(k/m);   T = 2π/ω = 2π·√(m/k)</div>
+    <div class="warn">⚠ Se prima c'è un urto: usa vf dell'urto come vᵢ per la molla → poi bilancio energetico</div>
+    <div class="out-box"><b>Output tipici:</b> ampiezza oscillazione, vmax, compressione x</div>
+    <span class="next-link" onclick="openAndScroll('urto')">← Combina con BLOCCO URTO (pendolo balistico)</span>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('en-molla')">↑ chiudi</div>
+</div>
+</div>
+
+<!-- BLOCCO CINEMATICA -->
+<div class="branch" id="b-cinem">
+<div class="arrow-down">↓</div>
+<div class="formula-card amber">
+  <div class="fc-title">BLOCCO C — CINEMATICA (parola chiave: "proiettile", "lanciato", "traiettoria", "gittata", "tempo di volo", "moto rettilineo uniforme/accelerato")</div>
+  <div class="q-row">
+    <div class="q-box" onclick="toggle('cin-par')">Moto parabolico (v₀ e angolo α dati)</div>
+    <div class="q-box" onclick="toggle('cin-ret')">Moto rettilineo (a = cost, o MRU)</div>
+    <div class="q-box" onclick="toggle('cin-circ')">Moto circolare</div>
+  </div>
+</div>
+
+<div class="branch" id="b-cin-par">
+  <div class="connector">
+  <div class="formula-card amber">
+    <div class="fc-title">MOTO PARABOLICO</div>
+    <div class="sub-q">Scomponi SEMPRE il moto in x (costante) e y (accelerato):</div>
+    <div class="eq-block">vx = v₀·cosα  (costante)</div>
+    <div class="eq-block">vy(t) = v₀·sinα - g·t</div>
+    <div class="eq-block">x(t) = v₀·cosα · t</div>
+    <div class="eq-block">y(t) = y₀ + v₀·sinα · t - ½g·t²</div>
+    <div class="sub-q">Tempo al massimo (vy = 0):</div>
+    <div class="eq-block">t_max = v₀·sinα / g</div>
+    <div class="sub-q">Quota massima:</div>
+    <div class="eq-block">H = y₀ + (v₀·sinα)² / (2g)</div>
+    <div class="sub-q">Gittata (da y=y₀, stesso piano):</div>
+    <div class="eq-block">R = v₀²·sin(2α) / g</div>
+    <div class="sub-q">Se lanciato orizzontalmente (α = 0):</div>
+    <div class="eq-block">x(t) = v₀·t;   y(t) = h - ½g·t²</div>
+    <div class="eq-block">t_caduta = √(2h/g);   x_caduta = v₀·√(2h/g)</div>
+    <div class="sub-q">Velocità in un punto generico:</div>
+    <div class="eq-block">|v| = √(vx² + vy²);   θ = arctan(vy/vx)</div>
+    <div class="out-box"><b>Output tipici:</b> gittata R, quota max H, tempo di volo, posizione in t, velocità finale</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('cin-par')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-cin-ret">
+  <div class="connector">
+  <div class="formula-card amber">
+    <div class="fc-title">MOTO RETTILINEO UNIFORMEMENTE ACCELERATO (MRUA)</div>
+    <div class="eq-block">v(t) = v₀ + a·t</div>
+    <div class="eq-block">x(t) = x₀ + v₀·t + ½a·t²</div>
+    <div class="eq-block">v² = v₀² + 2a·(x - x₀)</div>
+    <div class="sub-q">Caduta libera (a = g = 9.81 m/s²):</div>
+    <div class="eq-block">v = g·t;   h = ½g·t²;   v = √(2gh)</div>
+    <div class="sub-q">MRU (a = 0):</div>
+    <div class="eq-block">x(t) = x₀ + v·t</div>
+    <div class="out-box"><b>Output tipici:</b> posizione, velocità, tempo, accelerazione</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('cin-ret')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-cin-circ">
+  <div class="connector">
+  <div class="formula-card amber">
+    <div class="fc-title">MOTO CIRCOLARE UNIFORME</div>
+    <div class="eq-block">v = ω·r;   ω = 2π/T = 2π·f</div>
+    <div class="eq-block">a_c = v²/r = ω²·r  (centripeta, diretta verso il centro)</div>
+    <div class="sub-q">Forza centripeta necessaria:</div>
+    <div class="eq-block">F_c = m·v²/r = m·ω²·r</div>
+    <div class="sub-q">Su curva stradale (con attrito):</div>
+    <div class="eq-block">µs·mg ≥ m·v²/r  →  v_max = √(µs·g·r)</div>
+    <div class="out-box"><b>Output tipici:</b> v, ω, T, f, raggio min, forza centripeta</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('cin-circ')">↑ chiudi</div>
+</div>
+</div>
+
+<!-- BLOCCO DINAMICA -->
+<div class="branch" id="b-din">
+<div class="arrow-down">↓</div>
+<div class="formula-card coral">
+  <div class="fc-title">BLOCCO D — DINAMICA (parola chiave: "forza", "tensione", "fune", "piano inclinato", "accelerazione", "equilibrio")</div>
+  <div class="warn">⚠ PROCEDURA: (1) Disegna il diagramma delle forze. (2) Scegli assi comodi. (3) Scrivi ΣF = ma per ogni asse. (4) Risolvi il sistema.</div>
+  <div class="q-row">
+    <div class="q-box" onclick="toggle('din-eq')">Equilibrio (a = 0)</div>
+    <div class="q-box" onclick="toggle('din-acc')">Accelerazione (a ≠ 0)</div>
+    <div class="q-box" onclick="toggle('din-incl')">Piano inclinato</div>
+    <div class="q-box" onclick="toggle('din-fune')">Fune / Carrucola</div>
+  </div>
+</div>
+
+<div class="branch" id="b-din-eq">
+  <div class="connector">
+  <div class="formula-card coral">
+    <div class="fc-title">EQUILIBRIO STATICO</div>
+    <div class="eq-block">ΣF = 0  →  Fx = 0  e  Fy = 0</div>
+    <div class="sub-q">Corpo appeso a funi con angoli θ₁, θ₂:</div>
+    <div class="eq-block">T₁·cosθ₁ = T₂·cosθ₂  (asse x)</div>
+    <div class="eq-block">T₁·sinθ₁ + T₂·sinθ₂ = Mg  (asse y)</div>
+    <div class="sub-q">Piano inclinato (no attrito, fune parallela al piano):</div>
+    <div class="eq-block">T = mg·sinθ;   N = mg·cosθ</div>
+    <div class="out-box"><b>Output tipici:</b> tensioni, forza normale, angoli</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('din-eq')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-din-acc">
+  <div class="connector">
+  <div class="formula-card coral">
+    <div class="fc-title">SECONDA LEGGE DI NEWTON</div>
+    <div class="eq-block">ΣF = m·a  (forma vettoriale)</div>
+    <div class="eq-block">ΣFx = m·ax;   ΣFy = m·ay</div>
+    <div class="sub-q">Sistema con due masse collegate (fune inestensibile):</div>
+    <div class="eq-block">a = (m₂·g) / (m₁ + m₂)  (m₂ appeso, m₁ su piano senza attrito)</div>
+    <div class="eq-block">T = m₁·m₂·g / (m₁ + m₂)</div>
+    <div class="sub-q">Ascensore (N = reazione bilancia):</div>
+    <div class="eq-block">N - mg = ma  →  N = m(g + a)  [accelera in su]</div>
+    <div class="eq-block">N = m(g - a)  [accelera in giù]</div>
+    <div class="out-box"><b>Output tipici:</b> accelerazione, tensione, forza normale</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('din-acc')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-din-incl">
+  <div class="connector">
+  <div class="formula-card coral">
+    <div class="fc-title">PIANO INCLINATO (angolo θ)</div>
+    <div class="sub-q">Asse x ∥ piano (positivo verso il basso), asse y ⊥ piano:</div>
+    <div class="eq-block">N = mg·cosθ</div>
+    <div class="eq-block">a = g·sinθ  (senza attrito)</div>
+    <div class="eq-block">a = g·(sinθ - µk·cosθ)  (con attrito)</div>
+    <div class="sub-q">Condizione di scivolamento (attrito statico):</div>
+    <div class="eq-block">tanθ > µs  →  il corpo scivola</div>
+    <div class="out-box"><b>Output tipici:</b> N, accelerazione, µ_min, tensione fune</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('din-incl')">↑ chiudi</div>
+</div>
+
+<div class="branch" id="b-din-fune">
+  <div class="connector">
+  <div class="formula-card coral">
+    <div class="fc-title">FUNE / CARRUCOLA (fune di massa trascurabile)</div>
+    <div class="sub-q">Regola: la tensione è uguale ovunque nella fune (se fune ideale).</div>
+    <div class="eq-block">T = costante lungo la fune</div>
+    <div class="sub-q">Sistema Atwood (due masse appese):</div>
+    <div class="eq-block">a = (m₁ - m₂)·g / (m₁ + m₂)</div>
+    <div class="eq-block">T = 2·m₁·m₂·g / (m₁ + m₂)</div>
+    <div class="out-box"><b>Output tipici:</b> tensione T, accelerazione a</div>
+  </div>
+  </div>
+  <div class="back-btn" onclick="toggle('din-fune')">↑ chiudi</div>
+</div>
+</div>
+
+<!-- BLOCCO GRAVITAZIONE -->
+<div class="branch" id="b-grav">
+<div class="arrow-down">↓</div>
+<div class="formula-card blue">
+  <div class="fc-title">BLOCCO E — GRAVITAZIONE (parola chiave: "orbita", "satellite", "pianeta", "velocità di fuga", "periodo orbitale", G dato)</div>
+  <div class="warn">G = 6.674 × 10⁻¹¹ N·m²/kg²</div>
+  <div class="sub-q">Forza gravitazionale:</div>
+  <div class="eq-block">F = G·M·m / r²</div>
+  <div class="sub-q">Energia potenziale gravitazionale:</div>
+  <div class="eq-block">U = -G·M·m / r</div>
+  <div class="sub-q">Orbita circolare (F_g = F_c):</div>
+  <div class="eq-block">G·M·m/r² = m·v²/r  →  v = √(G·M/r)</div>
+  <div class="sub-q">Periodo orbitale (v = 2πr/T):</div>
+  <div class="eq-block">T = 2π·r / v = 2π·√(r³ / G·M)</div>
+  <div class="sub-q">Terza legge di Keplero:</div>
+  <div class="eq-block">T² = (4π²/G·M) · r³  →  T² ∝ r³</div>
+  <div class="sub-q">Velocità di fuga (U + K = 0 a r → ∞):</div>
+  <div class="eq-block">½mv²_fuga = G·M·m/r  →  v_fuga = √(2G·M/r)</div>
+  <div class="sub-q">Energia totale orbita circolare:</div>
+  <div class="eq-block">E_tot = K + U = ½mv² - G·M·m/r = -G·M·m/(2r)</div>
+  <div class="sub-q">Per confrontare due orbite (conservazione energia):</div>
+  <div class="eq-block">-G·M·m/(2r₁) = -G·M·m/(2r₂) + ΔE</div>
+  <div class="out-box"><b>Output tipici:</b> v orbitale, T, r, v_fuga, energia orbita</div>
+</div>
+</div>
+
+<!-- BLOCCO ROTAZIONE -->
+<div class="branch" id="b-rot">
+<div class="arrow-down">↓</div>
+<div class="formula-card" style="border-left-color:#444441">
+  <div class="fc-title" style="color:#444441">BLOCCO F — ROTAZIONE / CORPO RIGIDO (parola chiave: "ruota", "cilindro", "momento d'inerzia", "rotola", "asta", "momento angolare")</div>
+  <div class="sub-q">Energia cinetica di rotazione:</div>
+  <div class="eq-block">K_rot = ½·I·ω²</div>
+  <div class="sub-q">Energia totale (traslazione + rotazione):</div>
+  <div class="eq-block">K_tot = ½mv² + ½Iω²</div>
+  <div class="sub-q">Puro rotolamento (v = ω·R):</div>
+  <div class="eq-block">K_tot = ½mv² + ½I(v/R)² = ½v²(m + I/R²)</div>
+  <div class="sub-q">Momenti d'inerzia principali:</div>
+  <div class="eq-block">Cilindro solido (asse): I = ½mR²</div>
+  <div class="eq-block">Sfera solida:           I = ⅖mR²</div>
+  <div class="eq-block">Asta (asse al centro):  I = 1/12·mL²</div>
+  <div class="eq-block">Asta (asse a un'estrem): I = ⅓mL²</div>
+  <div class="eq-block">Anello / guscio cil.:   I = mR²</div>
+  <div class="sub-q">Teorema degli assi paralleli:</div>
+  <div class="eq-block">I = I_cm + m·d²  (d = distanza dal cm)</div>
+  <div class="sub-q">Seconda legge angolare:</div>
+  <div class="eq-block">Στ = I·α  (τ = r × F = r·F·sinφ)</div>
+  <div class="sub-q">Conservazione momento angolare (Στ_ext = 0):</div>
+  <div class="eq-block">L = I·ω = costante</div>
+  <div class="eq-block">I₁·ω₁ = I₂·ω₂</div>
+  <div class="out-box"><b>Output tipici:</b> ω, α, v_cm, velocità al fondo di un piano inclinato con rotolamento</div>
+  <div class="warn">⚠ Per corpo che rotola su piano inclinato: usa conservazione energia con K_tot (includi K_rot)</div>
+</div>
+</div>
+
+<div class="section-sep"></div>
+<div style="font-size:11px;color:var(--color-text-secondary);padding:6px 0 4px">
+  <b>LEGENDA:</b> ⚡ = nodo decisionale  |  → = collegamento tra blocchi  |  ΔK = variazione energia cinetica  |  ΔU = variazione energia potenziale  |  vᵢ = velocità iniziale  |  vf = velocità finale  |  ℓ = distanza  |  g = 9.81 m/s²
+</div>
+<div style="font-size:11px;color:var(--color-text-secondary);padding:0 0 4px">
+  <b>COME USARLO ALL'ESAME:</b> (1) Clicca il blocco che corrisponde al tuo problema. (2) Segui i sotto-nodi. (3) Copia la formula. (4) Se il problema è "a catena" (es: urto → molla), usa i link <span style="color:#0F6E56">→ Continua nel BLOCCO...</span>
+</div>
+</div>
+
+<script>
+function toggle(id){
+  const el=document.getElementById('b-'+id);
+  if(!el)return;
+  const open=el.classList.contains('open');
+  el.classList.toggle('open',!open);
+  const btn=document.querySelector(`[onclick="toggle('${id}')"]`);
+  if(btn)btn.classList.toggle('active',!open);
+}
+function openAndScroll(id){
+  const el=document.getElementById('b-'+id);
+  if(!el)return;
+  el.classList.add('open');
+  const btn=document.querySelector(`[onclick="toggle('${id}')"]`);
+  if(btn)btn.classList.add('active');
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+</script>
